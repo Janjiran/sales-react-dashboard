@@ -1,0 +1,47 @@
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+import bearFactory, {
+  ContextDeferredAuthProvider,
+} from "@gooddata/sdk-backend-bear";
+import { BackendProvider, WorkspaceProvider } from "@gooddata/sdk-ui";
+
+import "@gooddata/sdk-ui-filters/styles/css/main.css";
+import "@gooddata/sdk-ui-charts/styles/css/main.css";
+import "@gooddata/sdk-ui-geo/styles/css/main.css";
+import "@gooddata/sdk-ui-pivot/styles/css/main.css";
+import "@gooddata/sdk-ui-kit/styles/css/main.css";
+import "@gooddata/sdk-ui-ext/styles/css/main.css";
+
+import { factory } from "@gooddata/api-client-bear";
+
+import App from "App";
+import reportWebVitals from "./reportWebVitals";
+
+const backend = bearFactory()
+  .onHostname("https://secure.gooddata.com") // this should be the domain where the GoodData platform is hosted
+  .withAuthentication(new ContextDeferredAuthProvider());
+
+//   const bearClient = factory();
+// or if your application will be hosted on a different host than the GoodData platform backend
+const bearClient = factory({ domain: "https://secure.gooddata.com" }); // this should be the domain where the GoodData platform is hosted
+
+await bearClient.user.login("jan.jiran@gooddata.com", "$NCa5hakappnu");
+
+ReactDOM.render(
+  <React.StrictMode>
+    <BackendProvider backend={backend}>
+      <WorkspaceProvider workspace="p39gouppdhiq5bpqrzufga8fqw8ykq2x">
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </WorkspaceProvider>
+    </BackendProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
